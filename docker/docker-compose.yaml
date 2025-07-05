@@ -540,6 +540,7 @@ services:
       # Mount the storage directory to the container, for storing user files.
       - ./volumes/app/storage:/app/api/storage
     networks:
+      - dify-internal
       - ssrf_proxy_network
       - default
 
@@ -567,6 +568,7 @@ services:
       # Mount the storage directory to the container, for storing user files.
       - ./volumes/app/storage:/app/api/storage
     networks:
+      - dify-internal
       - ssrf_proxy_network
       - default
 
@@ -616,6 +618,8 @@ services:
       interval: 1s
       timeout: 3s
       retries: 60
+    networks:
+      - dify-internal
 
   # The redis cache.
   redis:
@@ -630,6 +634,8 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD:-difyai123456}
     healthcheck:
       test: [ 'CMD', 'redis-cli', 'ping' ]
+    networks:
+      - dify-internal
 
   # The DifySandbox
   sandbox:
@@ -711,6 +717,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - dify-internal
 
   # ssrf_proxy server
   # for more information, please refer to
@@ -1218,6 +1226,8 @@ services:
       - ./volumes/unstructured:/app/data
 
 networks:
+  dify-internal:
+    driver: bridge
   # create a network between sandbox, api and ssrf_proxy, and can not access outside.
   ssrf_proxy_network:
     driver: bridge
